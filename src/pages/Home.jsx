@@ -40,7 +40,7 @@ export default function Home() {
                     <button
                         className="login-btn"
                         onClick={handleSellArb}
-                        style={{ width: '100%', margin: '0', background: 'linear-gradient(135deg, #475569, #1e293b)' }}
+                        style={{ width: '100%', margin: '0', background: 'var(--text-secondary)' }}
                     >
                         <span className="btn-text">Sell ARB</span>
                         <span className="btn-icon">📈</span>
@@ -49,7 +49,7 @@ export default function Home() {
                     <button
                         className="login-btn"
                         onClick={() => alert('Coming soon!')}
-                        style={{ width: '100%', margin: '0', background: 'linear-gradient(135deg, #8b5cf6, #6366f1)' }}
+                        style={{ width: '100%', margin: '0', background: 'var(--accent-color)' }}
                     >
                         <span className="btn-text">Invite</span>
                         <span className="btn-icon">🎁</span>

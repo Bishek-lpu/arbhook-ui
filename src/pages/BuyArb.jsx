@@ -134,7 +134,7 @@ export default function BuyArb() {
                         <button
                             className="login-btn"
                             onClick={() => navigate('/home')}
-                            style={{ width: '100%', margin: '0', background: 'linear-gradient(135deg, #475569, #1e293b)' }}
+                            style={{ width: '100%', margin: '0', background: 'var(--text-secondary)' }}
                         >
                             <span className="btn-text">Go Back</span>
                             <span className="btn-icon">🔙</span>
@@ -165,7 +165,7 @@ export default function BuyArb() {
                         <button
                             className="login-btn"
                             onClick={() => setSelectedMethod(null)}
-                            style={{ width: '100%', margin: '0', background: 'linear-gradient(135deg, #475569, #1e293b)' }}
+                            style={{ width: '100%', margin: '0', background: 'var(--text-secondary)' }}
                         >
                             <span className="btn-text">Back to Methods</span>
                             <span className="btn-icon">🔙</span>
