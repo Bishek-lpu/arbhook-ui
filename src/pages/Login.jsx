@@ -64,6 +64,8 @@ export default function Login() {
                 // Handle specified errors appropriately
                 if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
                     alert(data.json.data.msg);
+                } else if (response.status === 400 && data.detail === "Subscription Expired") {
+                    navigate('/payment', { state: { mobile } });
                 } else if (response.status === 400) {
                     alert(`Login Failed: ${data.detail || data.err || 'Bad Request'}`);
                 } else if (response.status === 502) {

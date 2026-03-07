@@ -4,6 +4,7 @@ import Signup from './pages/Signup';
 import Otp from './pages/Otp';
 import Home from './pages/Home';
 import BuyArb from './pages/BuyArb';
+import Payment from './pages/Payment';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/otp" element={<Otp />} />
         <Route path="/home" element={<Home />} />
         <Route path="/buy-arb" element={<BuyArb />} />
+        <Route path="/payment" element={<Payment />} />
       </Routes>
     </BrowserRouter>
   );
