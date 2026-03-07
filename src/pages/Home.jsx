@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import { API_ENDPOINTS } from '../config';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function Home() {
         }
 
         try {
-            const response = await fetch('https://hp.bishek.in/user/referralCode', {
+            const response = await fetch(API_ENDPOINTS.USER.REFERRAL_CODE, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

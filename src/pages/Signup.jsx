@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import { API_ENDPOINTS } from '../config';
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -68,7 +69,7 @@ export default function Signup() {
         setIsLoading(true);
 
         try {
-            const response = await fetch('https://hp.bishek.in/auth/sendOtp', {
+            const response = await fetch(API_ENDPOINTS.AUTH.SEND_OTP, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

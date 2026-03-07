@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import { API_ENDPOINTS } from '../config';
 
 export default function Payment() {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function Payment() {
                 email: email.trim()
             };
 
-            const response = await fetch('https://hp.bishek.in/payments/create', {
+            const response = await fetch(API_ENDPOINTS.PAYMENTS.CREATE, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +75,7 @@ export default function Payment() {
                     <div className="header-top">
                         <ThemeToggle />
                     </div>
-                    <div className="success-icon" style={{ fontSize: '2.5rem', margin: '0 0 15px 0', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(251, 191, 36, 0.1)', border: '2px solid #fbbf24', borderRadius: '50%', color: '#fbbf24', margin: '0 auto 15px auto' }}>🔒</div>
+                    <div className="success-icon" style={{ fontSize: '2.5rem', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(251, 191, 36, 0.1)', border: '2px solid #fbbf24', borderRadius: '50%', color: '#fbbf24', margin: '0 auto 15px auto' }}>🔒</div>
                     <h1 className="logo" style={{ color: '#fbbf24', fontSize: '1.8rem' }}>Subscription Expired</h1>
                     <p className="subtitle">Your trial or subscription period has ended. Please renew to continue accessing ARB hook.</p>
                 </div>

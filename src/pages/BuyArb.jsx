@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import { API_ENDPOINTS } from '../config';
 
 export default function BuyArb() {
     const navigate = useNavigate();
@@ -99,7 +100,7 @@ export default function BuyArb() {
         }
 
         try {
-            const response = await fetch('https://hp.bishek.in/user/paymentList', {
+            const response = await fetch(API_ENDPOINTS.USER.PAYMENT_LIST, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -212,7 +213,7 @@ export default function BuyArb() {
         abortControllerRef.current = abortController;
 
         try {
-            const response = await fetch('https://hp.bishek.in/order/execute', {
+            const response = await fetch(API_ENDPOINTS.ORDER.EXECUTE, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

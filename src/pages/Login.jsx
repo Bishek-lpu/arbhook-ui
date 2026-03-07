@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import { API_ENDPOINTS } from '../config';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function Login() {
                 payload.invitationCode = invitationCode.trim();
             }
 
-            const response = await fetch('https://hp.bishek.in/auth/login', {
+            const response = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
