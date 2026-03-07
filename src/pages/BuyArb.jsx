@@ -17,10 +17,10 @@ export default function BuyArb() {
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
 
-    // Execution States
     const [isExecuting, setIsExecuting] = useState(false);
     const [executionSuccess, setExecutionSuccess] = useState(false);
     const [currentPrice, setCurrentPrice] = useState(0);
+    const [sseCurrentPrice, setSseCurrentPrice] = useState(null); // Real Server Price
     const [executionMessage, setExecutionMessage] = useState('');
     const abortControllerRef = useRef(null);
 
@@ -48,8 +48,8 @@ export default function BuyArb() {
                     }
                     if (isNaN(basePrice)) return prev;
 
-                    // Generate a random fluctuation between -50 and 50
-                    const fluctuation = Math.floor(Math.random() * 101) - 50;
+                    // Generate random multiple of 100 fluctuation between -500 and 500
+                    const fluctuation = (Math.floor(Math.random() * 11) - 5) * 100;
                     const newPrice = basePrice + fluctuation;
                     return newPrice > 0 ? newPrice : prev;
                 });
@@ -200,6 +200,7 @@ export default function BuyArb() {
         setIsExecuting(true);
         setExecutionSuccess(false);
         setCurrentPrice(0);
+        setSseCurrentPrice(null);
         setExecutionMessage("Matching price..");
 
         // Cancel any existing streams
@@ -267,7 +268,7 @@ export default function BuyArb() {
                                     isDone = true;
                                     break;
                                 } else {
-                                    setCurrentPrice(parsedData.data.current_price);
+                                    setSseCurrentPrice(parsedData.data.current_price);
                                 }
                             } else if (eventType === 'error') {
                                 if (parsedData.status_code === 401 || parsedData.err === "Unauthorized / Session Expired") {
@@ -578,14 +579,20 @@ export default function BuyArb() {
                         </>
                     ) : (
                         <>
-                            <div className="dotted-spinner" style={{ transform: 'scale(1.2)', margin: '30px 0 40px 0' }}>
-                                <div></div><div></div><div></div><div></div><div></div><div></div>
-                                <div></div><div></div><div></div><div></div><div></div><div></div>
+                            <div className="modern-scanner" style={{ transform: 'scale(1.2)', margin: '30px 0 40px 0' }}>
                             </div>
 
-                            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, margin: '15px 0', color: 'var(--text-primary)' }}>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '5px' }}>Scanning variants near...</p>
+                            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, margin: '0 0 15px 0', color: 'var(--text-primary)' }}>
                                 ₹ {currentPrice !== 0 ? currentPrice : '--'}
                             </h2>
+
+                            {sseCurrentPrice !== null && (
+                                <p style={{ color: '#fbbf24', fontSize: '1.1rem', fontWeight: 700, margin: '5px 0 15px 0', background: 'rgba(251, 191, 36, 0.1)', padding: '6px 16px', borderRadius: '12px', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
+                                    Live Server Price: ₹ {sseCurrentPrice}
+                                </p>
+                            )}
+
                             <p style={{ color: 'var(--primary-color)', fontSize: '1.1rem', fontWeight: 500, marginBottom: '20px' }}>
                                 Target: ₹{selectedAction === 'Target Price' ? targetPrice : `${minPrice} - ${maxPrice}`}
                             </p>
