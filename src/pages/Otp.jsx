@@ -78,36 +78,101 @@ export default function Otp() {
         }
     };
 
-    const handleResend = () => {
-        const newOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
-        sessionStorage.setItem('generatedOTP', newOtpCode);
-        console.log('New OTP:', newOtpCode);
-        alert(`New OTP has been sent!\n(For demo: ${newOtpCode})`);
-
-        setTimeLeft(60);
+    const handleResend = async () => {
         setIsResendDisabled(true);
-        setOtp(['', '', '', '', '', '']);
-        inputRefs.current[0].focus();
+        setStatus({ type: '', message: '' });
+
+        try {
+            const response = await fetch('https://hp.bishek.in/auth/sendOtp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phoneNumber: parseInt(signupMobile, 10),
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(`New OTP has been sent to ${signupMobile}!`);
+                setTimeLeft(60);
+                setOtp(['', '', '', '', '', '']);
+                inputRefs.current[0].focus();
+            } else {
+                if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
+                    setStatus({ type: 'error', message: '✗ ' + data.json.data.msg });
+                } else {
+                    setStatus({ type: 'error', message: `✗ ${data.detail || data.err || 'Failed to resend OTP.'}` });
+                }
+                setIsResendDisabled(false);
+            }
+        } catch (error) {
+            console.error('Resend OTP error:', error);
+            setStatus({ type: 'error', message: '✗ Network error. Please try again.' });
+            setIsResendDisabled(false);
+        }
     };
 
-    const handleVerify = (enteredOtpValue) => {
+    const handleVerify = async (enteredOtpValue) => {
         setIsVerifying(true);
-        const correctOTP = sessionStorage.getItem('generatedOTP');
+        setStatus({ type: '', message: '' });
 
-        setTimeout(() => {
-            setIsVerifying(false);
-            if (enteredOtpValue === correctOTP) {
-                setStatus({ type: 'success', message: '✓ OTP Verified Successfully!' });
+        const signupPassword = sessionStorage.getItem('signupPassword');
+        const signupInvitationCode = sessionStorage.getItem('signupInvitationCode');
+
+        if (!signupPassword) {
+            alert('Missing registration information. Please sign up again.');
+            navigate('/signup');
+            return;
+        }
+
+        try {
+            const payload = {
+                phoneNumber: parseInt(signupMobile, 10),
+                password: signupPassword,
+                otp: parseInt(enteredOtpValue, 10),
+            };
+
+            if (signupInvitationCode) {
+                payload.invitationCode = signupInvitationCode;
+            }
+
+            const response = await fetch('https://hp.bishek.in/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setStatus({ type: 'success', message: '✓ Registration Successful!' });
                 setTimeout(() => setShowSuccess(true), 500);
             } else {
-                setStatus({ type: 'error', message: '✗ Invalid OTP. Please try again.' });
+                let errorMessage = data.detail || data.err || 'Registration failed. Please try again.';
+                if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
+                    errorMessage = data.json.data.msg;
+                }
+
+                setStatus({ type: 'error', message: '✗ ' + errorMessage });
                 setOtp(['', '', '', '', '', '']);
                 inputRefs.current[0].focus();
 
                 setIsShaking(true);
                 setTimeout(() => setIsShaking(false), 400);
             }
-        }, 1000);
+        } catch (error) {
+            console.error('Verify OTP error:', error);
+            setStatus({ type: 'error', message: '✗ Network error verification failed.' });
+            setOtp(['', '', '', '', '', '']);
+            inputRefs.current[0].focus();
+        } finally {
+            setIsVerifying(false);
+        }
     };
 
     const handleSubmit = (e) => {
@@ -121,7 +186,7 @@ export default function Otp() {
     const handleSuccessClick = () => {
         sessionStorage.removeItem('signupMobile');
         sessionStorage.removeItem('signupPassword');
-        sessionStorage.removeItem('generatedOTP');
+        sessionStorage.removeItem('signupInvitationCode');
         navigate('/');
     };
 

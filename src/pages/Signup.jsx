@@ -1,17 +1,28 @@
 
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 
 export default function Signup() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const refCode = searchParams.get('ref') || '';
+
     const [isLoading, setIsLoading] = useState(false);
     const [mobile, setMobile] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [invitationCode, setInvitationCode] = useState(refCode);
     const [termsAccepted, setTermsAccepted] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
+
+    // Update invitationCode if refCode changes
+    useEffect(() => {
+        if (refCode) {
+            setInvitationCode(refCode);
+        }
+    }, [refCode]);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const getStrength = (pass) => {
@@ -41,7 +52,7 @@ export default function Signup() {
     const passwordsMatch = confirmPassword.length > 0 && password === confirmPassword;
     const passwordsNoMatch = confirmPassword.length > 0 && password !== confirmPassword;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
@@ -56,19 +67,43 @@ export default function Signup() {
 
         setIsLoading(true);
 
-        sessionStorage.setItem('signupMobile', mobile);
-        sessionStorage.setItem('signupPassword', password);
+        try {
+            const response = await fetch('https://hp.bishek.in/auth/sendOtp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phoneNumber: parseInt(mobile, 10),
+                }),
+            });
 
-        setTimeout(() => {
+            const data = await response.json();
+
+            if (response.ok) {
+                // Store registration data for the OTP page to pick up and process
+                sessionStorage.setItem('signupMobile', mobile);
+                sessionStorage.setItem('signupPassword', password);
+                if (invitationCode.trim() !== '') {
+                    sessionStorage.setItem('signupInvitationCode', invitationCode.trim());
+                }
+
+                // Do not store fake OTPs anymore
+                alert(`OTP has been sent to ${mobile}`);
+                navigate('/otp');
+            } else {
+                if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
+                    alert(data.json.data.msg);
+                } else {
+                    alert(`Error: ${data.detail || data.err || 'Failed to send OTP.'}`);
+                }
+            }
+        } catch (error) {
+            console.error('Send OTP error:', error);
+            alert('A network error occurred. Please check your connection and try again.');
+        } finally {
             setIsLoading(false);
-            const otp = Math.floor(100000 + Math.random() * 900000).toString();
-            sessionStorage.setItem('generatedOTP', otp);
-
-            console.log('Generated OTP:', otp);
-            alert(`OTP has been sent to ${mobile} \n(For demo: ${otp})`);
-
-            navigate('/otp');
-        }, 1500);
+        }
     };
 
     return (
@@ -160,6 +195,21 @@ export default function Signup() {
                         </div>
                     </div>
 
+                    <div className="form-group">
+                        <label htmlFor="invitationCode" className="form-label">Invitation Code (Optional)</label>
+                        <div className="input-wrapper">
+                            <span className="input-icon">🎁</span>
+                            <input
+                                type="text"
+                                id="invitationCode"
+                                className="form-input"
+                                placeholder="Enter invitation code"
+                                value={invitationCode}
+                                onChange={(e) => setInvitationCode(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
                     <div className="terms-checkbox">
                         <label className="remember-me">
                             <input
@@ -180,7 +230,7 @@ export default function Signup() {
                 </form>
 
                 <div className="signup-prompt">
-                    <p>Already have an account? <Link to="/" className="signup-link">Login</Link></p>
+                    <p>Already have an account? <Link to={`/${refCode ? `?ref=${refCode}` : ''}`} className="signup-link">Login</Link></p>
                 </div>
             </div>
         </div>
