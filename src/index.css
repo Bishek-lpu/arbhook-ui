@@ -1136,3 +1136,213 @@ body {
         font-size: 1.3rem;
     }
 }
+
+/* ============================================
+   Live Price Matching SSE Modal
+   ============================================ */
+.live-match-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    /* Match app theme overlay */
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.live-match-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.live-match-header {
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.live-match-content {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 40px;
+    text-align: center;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    animation: matchSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes matchSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Custom Dotted Spinner */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.dotted-spinner {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    margin: 20px auto 40px auto;
+    animation: spin 0.8s linear infinite;
+    /* Sped up rotation */
+}
+
+.dotted-spinner div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.dotted-spinner div:before {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fca311;
+    /* Gold dot */
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(252, 163, 17, 0.6);
+}
+
+.dotted-spinner div:nth-child(1) {
+    transform: rotate(0deg);
+}
+
+.dotted-spinner div:nth-child(2) {
+    transform: rotate(30deg);
+    opacity: 0.9;
+}
+
+.dotted-spinner div:nth-child(3) {
+    transform: rotate(60deg);
+    opacity: 0.8;
+}
+
+.dotted-spinner div:nth-child(4) {
+    transform: rotate(90deg);
+    opacity: 0.7;
+}
+
+.dotted-spinner div:nth-child(5) {
+    transform: rotate(120deg);
+    opacity: 0.6;
+}
+
+.dotted-spinner div:nth-child(6) {
+    transform: rotate(150deg);
+    opacity: 0.5;
+}
+
+.dotted-spinner div:nth-child(7) {
+    transform: rotate(180deg);
+    opacity: 0.4;
+}
+
+.dotted-spinner div:nth-child(8) {
+    transform: rotate(210deg);
+    opacity: 0.3;
+}
+
+.dotted-spinner div:nth-child(9) {
+    transform: rotate(240deg);
+    opacity: 0.2;
+}
+
+.dotted-spinner div:nth-child(10) {
+    transform: rotate(270deg);
+    opacity: 0.15;
+}
+
+.dotted-spinner div:nth-child(11) {
+    transform: rotate(300deg);
+    opacity: 0.1;
+}
+
+.dotted-spinner div:nth-child(12) {
+    transform: rotate(330deg);
+    opacity: 0.05;
+}
+
+.match-status-text {
+    color: #00bfff;
+    /* Bright blue target text */
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+}
+
+.match-current-price {
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.match-target-price {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.match-cancel-btn {
+    background: #c1121f;
+    /* Deep red */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    width: 250px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(193, 18, 31, 0.4);
+}
+
+.match-cancel-btn:hover {
+    background: #a10f1a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(193, 18, 31, 0.6);
+}
+
+.match-cancel-btn:active {
+    transform: translateY(0);
+}
