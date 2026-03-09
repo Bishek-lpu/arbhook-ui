@@ -1,8 +1,8 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
+import { showSuccessAlert, showErrorAlert, showInfoAlert } from '../utils/alert';
 
 export default function Otp() {
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function Otp() {
 
     useEffect(() => {
         if (!signupMobile) {
-            alert('Please complete the sign-up form first.');
+            showInfoAlert("Missing Info", "Please complete the sign-up form first.");
             navigate('/signup');
         }
 
@@ -97,7 +97,7 @@ export default function Otp() {
             const data = await response.json();
 
             if (response.ok) {
-                alert(`New OTP has been sent to ${signupMobile}!`);
+                showSuccessAlert("OTP Resent", `New OTP has been sent to ${signupMobile}!`);
                 setTimeLeft(60);
                 setOtp(['', '', '', '', '', '']);
                 inputRefs.current[0].focus();
@@ -124,7 +124,7 @@ export default function Otp() {
         const signupInvitationCode = sessionStorage.getItem('signupInvitationCode');
 
         if (!signupPassword) {
-            alert('Missing registration information. Please sign up again.');
+            showErrorAlert("Missing Info", "Missing registration information. Please sign up again.");
             navigate('/signup');
             return;
         }

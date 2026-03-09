@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
+import { showErrorAlert } from '../utils/alert';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -64,20 +65,20 @@ export default function Login() {
             } else {
                 // Handle specified errors appropriately
                 if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
-                    alert(data.json.data.msg);
+                    showErrorAlert("API Error", data.json.data.msg);
                 } else if (response.status === 400 && data.detail === "Subscription Expired") {
                     navigate('/payment', { state: { mobile } });
                 } else if (response.status === 400) {
-                    alert(`Login Failed: ${data.detail || data.err || 'Bad Request'}`);
+                    showErrorAlert("Login Failed", data.detail || data.err || 'Bad Request');
                 } else if (response.status === 502) {
-                    alert(`Server Error: ${data.detail || data.err || 'Invalid ARB response'}`);
+                    showErrorAlert("Server Error", data.detail || data.err || 'Invalid ARB response');
                 } else {
-                    alert(`Error: ${data.detail || data.err || 'An unexpected error occurred.'}`);
+                    showErrorAlert("Error", data.detail || data.err || 'An unexpected error occurred.');
                 }
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('A network error occurred. Please check your connection and try again.');
+            showErrorAlert("Network Error", "A network error occurred. Please check your connection and try again.");
         } finally {
             setIsLoading(false);
         }

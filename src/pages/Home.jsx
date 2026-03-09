@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
+import { showSuccessAlert, showErrorAlert, showInfoAlert } from '../utils/alert';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function Home() {
     const [generatedLink, setGeneratedLink] = useState('');
 
     const handleSellArb = () => {
-        alert("Coming soon!");
+        showInfoAlert("Coming Soon!", "This feature is currently under development.");
     };
 
     const handleBuyArb = () => {
@@ -30,7 +31,7 @@ export default function Home() {
         const authToken = localStorage.getItem('authToken');
 
         if (!userId || !phoneNumber || !authToken) {
-            alert("Session expired or missing authentication data. Please log in again.");
+            showErrorAlert("Session Expired", "Session expired or missing authentication data. Please log in again.");
             navigate('/');
             return;
         }
@@ -57,14 +58,14 @@ export default function Home() {
                 setGeneratedLink(link);
             } else {
                 if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
-                    alert(data.json.data.msg);
+                    showErrorAlert("API Error", data.json.data.msg);
                 } else {
-                    alert(`Error: ${data.detail || data.err || 'Failed to generate referral code.'}`);
+                    showErrorAlert("Generation Failed", data.detail || data.err || 'Failed to generate referral code.');
                 }
             }
         } catch (error) {
             console.error('Referral error:', error);
-            alert('A network error occurred while generating the referral.');
+            showErrorAlert("Network Error", "A network error occurred while generating the referral.");
         } finally {
             setIsGenerating(false);
         }
@@ -72,7 +73,7 @@ export default function Home() {
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(generatedLink);
-        alert("Referral link copied!");
+        showSuccessAlert("Copied!", "Referral link copied to clipboard!");
     };
 
     return (

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
+import { showErrorAlert } from '../utils/alert';
 
 export default function Payment() {
     const navigate = useNavigate();
@@ -49,16 +50,16 @@ export default function Payment() {
                 window.location.href = data.data.payment_url;
             } else {
                 if (response.status === 404) {
-                    alert(`User Error: ${data.detail || 'User not found.'}`);
+                    showErrorAlert("User Error", data.detail || 'User not found.');
                 } else if (response.status === 500) {
-                    alert(`Payment Error: ${data.detail || 'Could not generate payment link.'}`);
+                    showErrorAlert("Payment Error", data.detail || 'Could not generate payment link.');
                 } else {
-                    alert(`Error: ${data.detail || data.err || 'Failed to initialize payment gateway.'}`);
+                    showErrorAlert("Error", data.detail || data.err || 'Failed to initialize payment gateway.');
                 }
             }
         } catch (error) {
             console.error('Payment initialization error:', error);
-            alert('A network error occurred while reaching the payment gateway.');
+            showErrorAlert("Network Error", "A network error occurred while reaching the payment gateway.");
         } finally {
             setIsLoading(false);
         }

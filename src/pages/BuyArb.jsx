@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
+import { showErrorAlert, showInfoAlert } from '../utils/alert';
 
 export default function BuyArb() {
     const navigate = useNavigate();
@@ -94,7 +95,7 @@ export default function BuyArb() {
         const authToken = localStorage.getItem('authToken');
 
         if (!userId || !phoneNumber || !authToken) {
-            alert("Session expired or missing authentication data. Please log in again.");
+            showInfoAlert("Session Expired", "Session expired or missing authentication data. Please log in again.");
             navigate('/');
             return;
         }
@@ -118,21 +119,21 @@ export default function BuyArb() {
                 setPaymentMethods(data.data.boundBanks);
             } else {
                 if (data.status_code === 401 || data.err === "Unauthorized / Session Expired") {
-                    alert("Session expired. Please log in again.");
+                    showInfoAlert("Session Expired", "Session expired. Please log in again.");
                     localStorage.clear();
                     navigate('/');
                     return;
                 }
 
                 if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
-                    alert(data.json.data.msg);
+                    showErrorAlert("API Error", data.json.data.msg);
                 } else {
-                    alert(`Error: ${data.detail || data.err || 'Failed to fetch payment methods.'}`);
+                    showErrorAlert("Fetch Failed", data.detail || data.err || 'Failed to fetch payment methods.');
                 }
             }
         } catch (error) {
             console.error('Payment list error:', error);
-            alert('A network error occurred while fetching payment methods.');
+            showErrorAlert("Network Error", "A network error occurred while fetching payment methods.");
         } finally {
             setIsLoadingPayments(false);
         }
@@ -150,7 +151,7 @@ export default function BuyArb() {
         const authToken = localStorage.getItem('authToken');
 
         if (!userId || !phoneNumber || !authToken) {
-            alert("Session expired or missing authentication data. Please log in again.");
+            showInfoAlert("Session Expired", "Session expired or missing authentication data. Please log in again.");
             navigate('/');
             return;
         }
@@ -160,27 +161,27 @@ export default function BuyArb() {
 
         if (selectedAction === 'Target Price') {
             const rawPrices = targetPrice.split(',').map(p => p.trim()).filter(p => p !== '');
-            if (rawPrices.length > 10) return alert("Please enter a maximum of 10 prices.");
+            if (rawPrices.length > 10) { showErrorAlert("Limit Exceeded", "Please enter a maximum of 10 prices."); return; }
 
             const priceList = [];
             const seenPrices = new Set();
             for (let p of rawPrices) {
-                if (!/^\d+$/.test(p)) return alert(`Invalid price '${p}'. Only integer values are allowed.`);
+                if (!/^\d+$/.test(p)) { showErrorAlert("Invalid Input", `Invalid price '${p}'. Only integer values are allowed.`); return; }
                 const val = parseInt(p, 10);
-                if (val < 100) return alert(`Price must be at least 100. Invalid value: ${val}`);
-                if (seenPrices.has(val)) return alert(`Duplicate price found: ${val}. All target prices must be unique.`);
+                if (val < 100) { showErrorAlert("Too Low", `Price must be at least 100. Invalid value: ${val}`); return; }
+                if (seenPrices.has(val)) { showErrorAlert("Duplicate Price", `Duplicate price found: ${val}. All target prices must be unique.`); return; }
                 seenPrices.add(val);
                 priceList.push(val);
             }
             payloadPrices = { priceFilter: 'targetPrice', targetPrice: priceList };
 
         } else if (selectedAction === 'Price Range') {
-            if (!/^\d+$/.test(minPrice) || !/^\d+$/.test(maxPrice)) return alert("Min and Max prices must be valid integers.");
+            if (!/^\d+$/.test(minPrice) || !/^\d+$/.test(maxPrice)) { showErrorAlert("Invalid Input", "Min and Max prices must be valid integers."); return; }
             const min = parseInt(minPrice, 10);
             const max = parseInt(maxPrice, 10);
 
-            if (min < 100 || min > 100000 || max < 100 || max > 100000) return alert("Prices must be between 100 and 100,000.");
-            if (min >= max) return alert("Min price must be strictly less than Max price.");
+            if (min < 100 || min > 100000 || max < 100 || max > 100000) { showErrorAlert("Out of Range", "Prices must be between 100 and 100,000."); return; }
+            if (min >= max) { showErrorAlert("Invalid Range", "Min price must be strictly less than Max price."); return; }
 
             payloadPrices = { priceFilter: 'priceRange', priceRange: [min, max] };
         } else {
@@ -273,7 +274,7 @@ export default function BuyArb() {
                                 }
                             } else if (eventType === 'error') {
                                 if (parsedData.status_code === 401 || parsedData.err === "Unauthorized / Session Expired") {
-                                    alert("Session expired. Please log in again.");
+                                    showInfoAlert("Session Expired", "Session expired. Please log in again.");
                                     localStorage.clear();
                                     navigate('/');
                                     isDone = true;
@@ -289,7 +290,7 @@ export default function BuyArb() {
                                     isDone = true;
                                     break;
                                 }
-                                alert(`Server error: ${parsedData.err || 'Stream terminated.'}`);
+                                showErrorAlert("Server Error", parsedData.err || 'Stream terminated.');
                                 setIsExecuting(false);
                                 isDone = true;
                                 break;
@@ -309,7 +310,7 @@ export default function BuyArb() {
                 console.log('Stream manually canceled.');
             } else {
                 console.error('Execution stream error:', error);
-                alert('A network error occurred while executing the order.');
+                showErrorAlert("Network Error", "A network error occurred while executing the order.");
             }
             setIsExecuting(false);
         }

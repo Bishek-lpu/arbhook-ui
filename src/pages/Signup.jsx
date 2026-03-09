@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
+import { showSuccessAlert, showErrorAlert } from '../utils/alert';
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -57,12 +57,12 @@ export default function Signup() {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            alert('Passwords do not match!');
+            showErrorAlert("Passwords Mismatch", "The passwords you entered do not match!");
             return;
         }
 
         if (!termsAccepted) {
-            alert('Please accept the Terms & Conditions');
+            showErrorAlert("Terms Required", "Please accept the Terms & Conditions to continue.");
             return;
         }
 
@@ -89,19 +89,18 @@ export default function Signup() {
                     sessionStorage.setItem('signupInvitationCode', invitationCode.trim());
                 }
 
-                // Do not store fake OTPs anymore
-                alert(`OTP has been sent to ${mobile}`);
+                showSuccessAlert("OTP Sent", `An OTP has been sent to ${mobile}`);
                 navigate('/otp');
             } else {
                 if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
-                    alert(data.json.data.msg);
+                    showErrorAlert("API Error", data.json.data.msg);
                 } else {
-                    alert(`Error: ${data.detail || data.err || 'Failed to send OTP.'}`);
+                    showErrorAlert("Failed", data.detail || data.err || 'Failed to send OTP.');
                 }
             }
         } catch (error) {
             console.error('Send OTP error:', error);
-            alert('A network error occurred. Please check your connection and try again.');
+            showErrorAlert("Network Error", "A network error occurred. Please check your connection and try again.");
         } finally {
             setIsLoading(false);
         }
