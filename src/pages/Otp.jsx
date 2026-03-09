@@ -202,7 +202,7 @@ export default function Otp() {
                     <div className="header-top">
                         <ThemeToggle />
                     </div>
-                    <h1 className="logo">ARB hook</h1>
+                    <h1 className="logo">Arb<span className="logo-highlight">hook</span></h1>
                     <p className="subtitle">Enter the 6-digit code sent to</p>
                     <p className="mobile-display">{maskedMobile}</p>
                 </div>

@@ -237,13 +237,25 @@ body {
 }
 
 .logo {
-    font-size: 2.2rem;
-    /* Reduced font size to save vertical space */
-    font-weight: 800;
-    color: var(--primary-dark);
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--text-primary);
     margin-bottom: var(--spacing-xs);
-    letter-spacing: -0.5px;
-    /* Soft glow animation removed for cleaner look */
+    letter-spacing: -1.5px;
+    filter: drop-shadow(0 4px 12px rgba(255, 157, 10, 0.35));
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.logo-highlight {
+    background: linear-gradient(135deg, #FFD62B 0%, #FF9D0A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.logo:hover {
+    transform: scale(1.02);
 }
 
 @keyframes glow {

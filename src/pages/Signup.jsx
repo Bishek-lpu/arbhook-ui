@@ -117,7 +117,7 @@ export default function Signup() {
                     <div className="header-top">
                         <ThemeToggle />
                     </div>
-                    <h1 className="logo">ARB hook</h1>
+                    <h1 className="logo">Arb<span className="logo-highlight">hook</span></h1>
                     <p className="subtitle">Create your account and join us today!</p>
                 </div>
 

@@ -87,7 +87,7 @@ export default function Home() {
                     <div className="header-top">
                         <ThemeToggle />
                     </div>
-                    <h1 className="logo">ARB hook</h1>
+                    <h1 className="logo">Arb<span className="logo-highlight">hook</span></h1>
                     <p className="subtitle">Welcome to your dashboard</p>
                 </div>
 
