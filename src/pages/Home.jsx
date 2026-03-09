@@ -109,63 +109,102 @@ export default function Home() {
                         <span className="btn-icon">📈</span>
                     </button>
 
+                    {/* Attractive Refer and Earn Banner */}
+                    <div style={{
+                        background: 'linear-gradient(135deg, #FF9900 0%, #FF5500 100%)',
+                        borderRadius: '10px',
+                        padding: '15px',
+                        color: 'white',
+                        textAlign: 'center',
+                        boxShadow: '0 4px 15px rgba(255, 85, 0, 0.3)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)'
+                    }}>
+                        <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '24px' }}>🎁</span> Refer & Earn
+                        </h3>
+                        <div style={{ background: 'rgba(0,0,0,0.15)', borderRadius: '8px', padding: '10px', marginTop: '10px' }}>
+                            <p style={{ margin: '0 0 8px 0', fontSize: '14px', lineHeight: '1.4', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span>Friend Logs in:</span>
+                                <strong style={{ fontSize: '16px', color: '#FFF5E1', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px' }}>₹20</strong>
+                            </p>
+                            <p style={{ margin: '0 0 8px 0', fontSize: '14px', lineHeight: '1.4', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span>Buys Membership:</span>
+                                <strong style={{ fontSize: '16px', color: '#FFF5E1', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px' }}>₹100</strong>
+                            </p>
+                            <p style={{ margin: '0', fontSize: '14px', lineHeight: '1.4', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFD700', fontWeight: 'bold' }}>
+                                <span>🎉 New Sign Up:</span>
+                                <strong style={{ fontSize: '16px', color: '#FFF5E1', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px' }}>₹100</strong>
+                            </p>
+                        </div>
+                    </div>
+
                     <button
                         className="login-btn"
                         onClick={() => setIsInviteOpen(!isInviteOpen)}
                         style={{ width: '100%', margin: '0', background: 'var(--accent-color)' }}
                     >
-                        <span className="btn-text">Invite</span>
+                        <span className="btn-text">Refer and Earn</span>
                         <span className="btn-icon">{isInviteOpen ? '▼' : '🎁'}</span>
                     </button>
 
                     {/* Expandable Invite Form */}
                     {isInviteOpen && (
-                        <div style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', marginTop: '10px' }}>
+                        <div style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '15px', border: '1px solid var(--border-color)' }}>
                             {generatedLink ? (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                    <p style={{ color: 'var(--text-primary)', fontSize: '14px', textAlign: 'center' }}>Your Referral Link:</p>
-                                    <input
-                                        type="text"
-                                        readOnly
-                                        value={generatedLink}
-                                        style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                                    />
-                                    <button onClick={copyToClipboard} className="login-btn" style={{ padding: '10px', minHeight: '40px', fontSize: '14px', width: '100%', margin: '0' }}>
+                                    <p style={{ color: 'var(--text-primary)', fontSize: '14px', textAlign: 'center', fontWeight: 'bold' }}>Your Referral Link:</p>
+                                    <div className="input-wrapper" style={{ margin: 0 }}>
+                                        <span className="input-icon">🔗</span>
+                                        <input
+                                            type="text"
+                                            readOnly
+                                            value={generatedLink}
+                                            className="form-input"
+                                        />
+                                    </div>
+                                    <button onClick={copyToClipboard} className="login-btn" style={{ padding: '10px', minHeight: '40px', fontSize: '14px', width: '100%', margin: '0', background: 'var(--accent-color)' }}>
                                         Copy Link
                                     </button>
                                 </div>
                             ) : (
-                                <form onSubmit={handleGenerateReferral} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                                    <div>
-                                        <label style={{ color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '5px', display: 'block' }}>Full Name (required)</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            minLength="3"
-                                            value={fullName}
-                                            onChange={(e) => setFullName(e.target.value)}
-                                            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                                            placeholder="John Doe"
-                                        />
+                                <form onSubmit={handleGenerateReferral} className="login-form" style={{ marginTop: 0 }}>
+                                    <div className="form-group" style={{ marginBottom: '15px' }}>
+                                        <label style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '8px', display: 'block', fontWeight: '500' }}>Full Name (Required)</label>
+                                        <div className="input-wrapper">
+                                            <span className="input-icon">👤</span>
+                                            <input
+                                                type="text"
+                                                required
+                                                minLength="3"
+                                                value={fullName}
+                                                onChange={(e) => setFullName(e.target.value)}
+                                                className="form-input"
+                                                placeholder="e.g. John Doe"
+                                            />
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label style={{ color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '5px', display: 'block' }}>UPI ID (required)</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            value={upiId}
-                                            onChange={(e) => setUpiId(e.target.value)}
-                                            style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                                            placeholder="username@bankname"
-                                        />
+                                    <div className="form-group" style={{ marginBottom: '20px' }}>
+                                        <label style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '8px', display: 'block', fontWeight: '500' }}>UPI ID (Required)</label>
+                                        <div className="input-wrapper">
+                                            <span className="input-icon">💳</span>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={upiId}
+                                                onChange={(e) => setUpiId(e.target.value)}
+                                                className="form-input"
+                                                placeholder="username@bankname"
+                                            />
+                                        </div>
                                     </div>
                                     <button
                                         type="submit"
                                         disabled={isGenerating}
                                         className="login-btn"
-                                        style={{ padding: '10px', minHeight: '40px', fontSize: '14px', width: '100%', margin: '0', opacity: isGenerating ? 0.7 : 1 }}
+                                        style={{ padding: '12px', minHeight: '45px', fontSize: '15px', width: '100%', margin: '0', opacity: isGenerating ? 0.7 : 1 }}
                                     >
-                                        {isGenerating ? 'Generating...' : 'Get Referral Link'}
+                                        <span className="btn-text">{isGenerating ? 'Generating...' : 'Get Referral Link'}</span>
+                                        {!isGenerating && <span className="btn-icon">✨</span>}
                                     </button>
                                 </form>
                             )}
