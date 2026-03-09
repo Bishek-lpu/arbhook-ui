@@ -149,6 +149,8 @@ export default function Signup() {
                             <input
                                 type="tel"
                                 id="mobile"
+                                name="mobile"
+                                autoComplete="tel"
                                 className="form-input"
                                 placeholder="Enter your mobile number"
                                 pattern="[0-9]{10}"
@@ -167,6 +169,8 @@ export default function Signup() {
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
+                                name="password"
+                                autoComplete="new-password"
                                 className="form-input"
                                 placeholder="Create a strong password"
                                 minLength="6"
@@ -194,6 +198,8 @@ export default function Signup() {
                             <input
                                 type={showConfirmPassword ? 'text' : 'password'}
                                 id="confirmPassword"
+                                name="confirmPassword"
+                                autoComplete="new-password"
                                 className="form-input"
                                 placeholder="Re-enter your password"
                                 minLength="6"
