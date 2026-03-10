@@ -1,0 +1,17 @@
+{
+    "name": "Arbhook",
+    "short_name": "Arbhook",
+    "description": "Arbhook Dashboard Application",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#FFD62B",
+    "icons": [
+        {
+            "src": "/arb-logo.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}
