@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://arbhook.bishek.in';
+export const BASE_URL = 'https://api.arbhook.com';
 
 export const API_ENDPOINTS = {
     AUTH: {
