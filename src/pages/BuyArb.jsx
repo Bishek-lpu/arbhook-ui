@@ -176,7 +176,7 @@ export default function BuyArb() {
                 seenPrices.add(val);
                 priceList.push(val);
             }
-            payloadPrices = { price_filter: 'target_price', target_price: priceList, price_range: [] };
+            payloadPrices = { price_filter: 'target_price', target_price: priceList };
 
         } else if (selectedAction === 'Price Range') {
             if (!/^\d+$/.test(minPrice) || !/^\d+$/.test(maxPrice)) { showErrorAlert("Invalid Input", "Min and Max prices must be valid integers."); return; }
@@ -186,7 +186,7 @@ export default function BuyArb() {
             if (min < 100 || min > 100000 || max < 100 || max > 100000) { showErrorAlert("Out of Range", "Prices must be between 100 and 100,000."); return; }
             if (min >= max) { showErrorAlert("Invalid Range", "Min price must be strictly less than Max price."); return; }
 
-            payloadPrices = { price_filter: 'price_range', target_price: [], price_range: [min, max] };
+            payloadPrices = { price_filter: 'price_range', price_range: [min, max] };
         } else {
             return;
         }
