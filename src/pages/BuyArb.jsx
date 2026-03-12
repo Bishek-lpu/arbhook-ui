@@ -100,6 +100,8 @@ export default function BuyArb() {
             return;
         }
 
+        const orderTypeMap = { 'UPI': 0, 'OTP-UPI': 1, 'Bank': 2 };
+
         try {
             const response = await fetch(API_ENDPOINTS.USER.PAYMENT_LIST, {
                 method: 'POST',
@@ -107,16 +109,17 @@ export default function BuyArb() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    userId,
-                    phoneNumber,
-                    authToken
+                    user_id: userId,
+                    phone_number: phoneNumber,
+                    auth_token: authToken,
+                    order_type: orderTypeMap[method]
                 }),
             });
 
             const data = await response.json();
 
-            if (response.ok && data.data && data.data.boundBanks) {
-                setPaymentMethods(data.data.boundBanks);
+            if (response.ok && data.data && data.data.all_banks) {
+                setPaymentMethods(data.data.all_banks);
             } else {
                 if (data.status_code === 401 || data.err === "Unauthorized / Session Expired") {
                     showInfoAlert("Session Expired", "Session expired. Please log in again.");
@@ -173,7 +176,7 @@ export default function BuyArb() {
                 seenPrices.add(val);
                 priceList.push(val);
             }
-            payloadPrices = { priceFilter: 'targetPrice', targetPrice: priceList };
+            payloadPrices = { price_filter: 'target_price', target_price: priceList, price_range: [] };
 
         } else if (selectedAction === 'Price Range') {
             if (!/^\d+$/.test(minPrice) || !/^\d+$/.test(maxPrice)) { showErrorAlert("Invalid Input", "Min and Max prices must be valid integers."); return; }
@@ -183,18 +186,18 @@ export default function BuyArb() {
             if (min < 100 || min > 100000 || max < 100 || max > 100000) { showErrorAlert("Out of Range", "Prices must be between 100 and 100,000."); return; }
             if (min >= max) { showErrorAlert("Invalid Range", "Min price must be strictly less than Max price."); return; }
 
-            payloadPrices = { priceFilter: 'priceRange', priceRange: [min, max] };
+            payloadPrices = { price_filter: 'price_range', target_price: [], price_range: [min, max] };
         } else {
             return;
         }
 
         const payload = {
-            userId,
-            phoneNumber,
-            authToken,
-            orderType: orderTypeMap[selectedMethod],
-            upiApp: selectedBank?.upiApp,
-            upiAppId: selectedBank?.upiAppId,
+            user_id: userId,
+            phone_number: phoneNumber,
+            auth_token: authToken,
+            order_type: orderTypeMap[selectedMethod],
+            upi_app_code: selectedBank?.upiApp,
+            upi_app_id: selectedBank?.upiAppId || 0,
             ...payloadPrices
         };
 
@@ -401,17 +404,17 @@ export default function BuyArb() {
                             ) : paymentMethods.length > 0 ? (
                                 paymentMethods.map((bank) => (
                                     <button
-                                        key={bank.id}
+                                        key={bank.upi_app_id}
                                         className="login-btn"
-                                        onClick={() => setSelectedBank({ upiAppId: bank.id, upiApp: bank.bankCode, bankName: bank.bankName })}
+                                        onClick={() => setSelectedBank({ upiAppId: bank.upi_app_id, upiApp: bank.upi_code, bankName: bank.upi_app_name })}
                                         style={{ width: '100%', margin: '0', display: 'flex', alignItems: 'center', position: 'relative' }}
                                     >
-                                        {bank.iconUrl && (
+                                        {bank.icon_url && (
                                             <div style={{ position: 'absolute', left: '16px', display: 'flex', alignItems: 'center' }}>
-                                                <img src={bank.iconUrl} alt={bank.bankName} style={{ width: '24px', height: '24px', borderRadius: '4px' }} />
+                                                <img src={bank.icon_url} alt={bank.upi_app_name} style={{ width: '24px', height: '24px', borderRadius: '4px' }} />
                                             </div>
                                         )}
-                                        <span className="btn-text" style={{ width: '100%', textAlign: 'center' }}>{bank.bankName}</span>
+                                        <span className="btn-text" style={{ width: '100%', textAlign: 'center' }}>{bank.upi_app_name}</span>
                                     </button>
                                 ))
                             ) : (
