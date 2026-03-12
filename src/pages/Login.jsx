@@ -30,12 +30,12 @@ export default function Login() {
 
         try {
             const payload = {
-                phoneNumber: parseInt(mobile, 10),
+                phone_number: parseInt(mobile, 10),
                 password: password
             };
 
             if (invitationCode.trim() !== '') {
-                payload.invitationCode = invitationCode.trim();
+                payload.invitation_code = invitationCode.trim();
             }
 
             const response = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
@@ -51,9 +51,9 @@ export default function Login() {
             if (response.ok) {
                 // Save the auth token (e.g., in localStorage)
                 if (data.data) {
-                    if (data.data.authToken) localStorage.setItem('authToken', data.data.authToken);
-                    if (data.data.userId) localStorage.setItem('userId', data.data.userId);
-                    if (data.data.phoneNumber) localStorage.setItem('phoneNumber', data.data.phoneNumber);
+                    if (data.data.auth_token) localStorage.setItem('authToken', data.data.auth_token);
+                    if (data.data.user_id) localStorage.setItem('userId', data.data.user_id);
+                    if (data.data.phone_number) localStorage.setItem('phoneNumber', data.data.phone_number);
                 }
 
                 if (data.isNewUser) {
