@@ -43,18 +43,18 @@ export default function Home() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    fullName,
-                    upiId,
-                    userId,
-                    phoneNumber,
-                    authToken
+                    full_name: fullName,
+                    upi_id: upiId,
+                    user_id: userId,
+                    phone_number: phoneNumber,
+                    auth_token: authToken
                 }),
             });
 
             const data = await response.json();
 
-            if (response.ok && data.data && data.data.referralCode) {
-                const link = `${window.location.origin}/?ref=${data.data.referralCode}`;
+            if (response.ok && data.data && data.data.referral_code) {
+                const link = `${window.location.origin}/?ref=${data.data.referral_code}`;
                 setGeneratedLink(link);
             } else {
                 if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
