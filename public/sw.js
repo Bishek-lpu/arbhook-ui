@@ -6,6 +6,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
+    self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
@@ -15,6 +16,15 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+    // Network-first strategy for navigation requests (HTML pages)
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
+    // Default Cache-First for everything else
     event.respondWith(
         caches.match(event.request)
             .then(response => {
@@ -28,6 +38,7 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', event => {
+    event.waitUntil(self.clients.claim());
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         caches.keys().then(cacheNames => {
