@@ -30,8 +30,8 @@ export default function Payment() {
 
         try {
             const payload = {
-                fullName: fullName.trim(),
-                phoneNumber: parseInt(mobile, 10),
+                full_name: fullName.trim(),
+                phone_number: parseInt(mobile, 10),
                 email: email.trim()
             };
 
