@@ -75,7 +75,7 @@ export default function Signup() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    phoneNumber: parseInt(mobile, 10),
+                    phone_number: parseInt(mobile, 10),
                 }),
             });
 

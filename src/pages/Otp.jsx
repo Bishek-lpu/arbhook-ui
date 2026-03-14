@@ -90,7 +90,7 @@ export default function Otp() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    phoneNumber: parseInt(signupMobile, 10),
+                    phone_number: parseInt(signupMobile, 10),
                 }),
             });
 
@@ -131,13 +131,13 @@ export default function Otp() {
 
         try {
             const payload = {
-                phoneNumber: parseInt(signupMobile, 10),
+                phone_number: parseInt(signupMobile, 10),
                 password: signupPassword,
                 otp: parseInt(enteredOtpValue, 10),
             };
 
             if (signupInvitationCode) {
-                payload.invitationCode = signupInvitationCode;
+                payload.invitation_code = signupInvitationCode;
             }
 
             const response = await fetch(API_ENDPOINTS.AUTH.SIGNUP, {
