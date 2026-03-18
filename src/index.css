@@ -1315,3 +1315,184 @@ body {
 .match-cancel-btn:active {
     transform: translateY(0);
 }
+/* ============================================
+   Promotional Banner Styles (Payment Page)
+   ============================================ */
+.promo-banner {
+    position: relative;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    margin: var(--spacing-sm) 0 var(--spacing-md) 0;
+    color: white;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Glassmorphic touch */
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-theme .promo-banner {
+    background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
+    box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.promo-banner:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.5);
+}
+
+.promo-badge {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    background: #fbbf24;
+    color: #78350f;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    animation: slideDownBadge 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes slideDownBadge {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.promo-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.promo-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: -0.5px;
+}
+
+.promo-pricing {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.price-old {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: #ef4444; /* Red strikethrough */
+}
+
+.price-new {
+    font-size: 2.8rem;
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    animation: pulsePrice 2s infinite ease-in-out;
+}
+
+@keyframes pulsePrice {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); text-shadow: 0 6px 12px rgba(0,0,0,0.4); }
+    100% { transform: scale(1); }
+}
+
+.currency {
+    font-size: 1.5rem;
+    font-weight: 700;
+    vertical-align: top;
+    margin-right: 2px;
+}
+
+.price-old .currency {
+    font-size: 0.9rem;
+}
+
+.promo-saving {
+    margin-top: 5px;
+}
+
+.saving-badge {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(5px);
+}
+
+/* Background Animated Elements for Banner */
+.promo-bg-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: var(--radius-md);
+}
+
+.promo-glow {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.3);
+    filter: blur(40px);
+    border-radius: 50%;
+    animation: rotateGlow 8s linear infinite;
+}
+
+@keyframes rotateGlow {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(100%, 50%) scale(1.5); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+.promo-sparkle {
+    position: absolute;
+    font-size: 1.2rem;
+    opacity: 0;
+    animation: popSparkle 3s infinite ease-in-out;
+}
+
+.promo-sparkle.s1 {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0.5s;
+}
+
+.promo-sparkle.s2 {
+    bottom: 20%;
+    right: 15%;
+    font-size: 1.5rem;
+    animation-delay: 1.5s;
+}
+
+@keyframes popSparkle {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}

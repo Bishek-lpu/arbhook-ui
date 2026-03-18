@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import PromotionalBanner from '../components/PromotionalBanner';
 import { API_ENDPOINTS } from '../config';
 import { showErrorAlert } from '../utils/alert';
 
@@ -80,6 +81,8 @@ export default function Payment() {
                     <h1 className="logo" style={{ color: '#fbbf24', fontSize: '1.8rem' }}>Subscription Expired</h1>
                     <p className="subtitle">Your trial or subscription period has ended. Please renew to continue accessing Arbhook.</p>
                 </div>
+
+                <PromotionalBanner />
 
                 <form className="login-form" onSubmit={handlePaymentSubmit} style={{ marginTop: '20px' }}>
                     <div className="form-group">
