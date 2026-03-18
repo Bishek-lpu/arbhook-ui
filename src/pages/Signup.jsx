@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
 import { showSuccessAlert, showErrorAlert } from '../utils/alert';
+import SEO from '../components/SEO';
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -108,6 +109,7 @@ export default function Signup() {
 
     return (
         <div className="container">
+            <SEO title="Create an Account" description="Create an Arbhook account today and get a 7-Day Free Premium Trial." />
             <div className="bg-circle circle-1"></div>
             <div className="bg-circle circle-2"></div>
             <div className="bg-circle circle-3"></div>

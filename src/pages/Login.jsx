@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
 import { showErrorAlert } from '../utils/alert';
+import SEO from '../components/SEO';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -86,6 +87,7 @@ export default function Login() {
 
     return (
         <div className="container">
+            <SEO title="Login" description="Login to your Arbhook dashboard to access your secure ARB wallet." />
             <div className="bg-circle circle-1"></div>
             <div className="bg-circle circle-2"></div>
             <div className="bg-circle circle-3"></div>

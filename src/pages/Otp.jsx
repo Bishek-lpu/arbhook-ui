@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
 import { showSuccessAlert, showErrorAlert, showInfoAlert } from '../utils/alert';
+import SEO from '../components/SEO';
 
 export default function Otp() {
     const navigate = useNavigate();
@@ -193,6 +194,7 @@ export default function Otp() {
 
     return (
         <div className="container">
+            <SEO title="Verify OTP" description="Verify your Arbhook account to access your secure ARB wallet." />
             <div className="bg-circle circle-1"></div>
             <div className="bg-circle circle-2"></div>
             <div className="bg-circle circle-3"></div>

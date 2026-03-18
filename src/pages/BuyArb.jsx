@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
 import { showErrorAlert, showInfoAlert } from '../utils/alert';
+import SEO from '../components/SEO';
 
 export default function BuyArb() {
     const navigate = useNavigate();
@@ -307,7 +308,8 @@ export default function BuyArb() {
     };
 
     return (
-        <div className="container">
+        <div className="container" style={{ paddingBottom: '30px' }}>
+            <SEO title="Buy ARB" description="Buy custom options ARB that fits your budget safely and fast." />
             <div className="bg-circle circle-1"></div>
             <div className="bg-circle circle-2"></div>
             <div className="bg-circle circle-3"></div>

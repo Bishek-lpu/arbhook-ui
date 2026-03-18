@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import SEO from '../components/SEO';
 
 export default function Landing() {
     const navigate = useNavigate();
@@ -14,6 +15,10 @@ export default function Landing() {
 
     return (
         <div className="container">
+            <SEO 
+                title="The Ultimate ARB Tool" 
+                description="Arbhook seamlessly hooks ARB coins for you. Make ARB wallet easy, buy ARB coins hassle-free." 
+            />
             <div className="bg-circle circle-1"></div>
             <div className="bg-circle circle-2"></div>
             <div className="bg-circle circle-3"></div>

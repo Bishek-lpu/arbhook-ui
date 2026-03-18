@@ -1,12 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
+import SEO from '../components/SEO';
 
 export default function About() {
     const navigate = useNavigate();
 
     return (
         <div className="container-lg" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'center' }}>
+            <SEO title="About Us" description="Learn more about Arbhook, your ultimate gateway to Safe ARB." />
             <div className="bg-circle circle-1"></div>
             <div className="bg-circle circle-2" style={{ bottom: '20%', right: '10%' }}></div>
             <div className="bg-circle circle-3" style={{ top: '20%', left: '10%' }}></div>

@@ -4,6 +4,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import PromotionalBanner from '../components/PromotionalBanner';
 import { API_ENDPOINTS } from '../config';
 import { showErrorAlert } from '../utils/alert';
+import SEO from '../components/SEO';
 
 export default function Payment() {
     const navigate = useNavigate();
@@ -63,7 +64,8 @@ export default function Payment() {
     };
 
     return (
-        <div className="container">
+        <div className="container payment-container" style={{ paddingBottom: '30px' }}>
+            <SEO title="Premium Payment" description="Secure Arbhook checkout for Premium membership." />
             <div className="bg-circle circle-1"></div>
             <div className="bg-circle circle-2"></div>
             <div className="bg-circle circle-3"></div>

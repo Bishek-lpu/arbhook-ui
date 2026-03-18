@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import { API_ENDPOINTS } from '../config';
 import { showSuccessAlert, showErrorAlert, showInfoAlert } from '../utils/alert';
+import SEO from '../components/SEO';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -77,6 +78,7 @@ export default function Home() {
 
     return (
         <div className="container" style={{ position: 'relative' }}>
+            <SEO title="Dashboard" description="Manage your Arbhook secure ARB wallet and dashboard." />
             <div className="bg-circle circle-1"></div>
             <div className="bg-circle circle-2"></div>
             <div className="bg-circle circle-3"></div>
