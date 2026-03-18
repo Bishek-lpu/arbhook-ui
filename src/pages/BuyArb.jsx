@@ -7,14 +7,12 @@ import { showErrorAlert, showInfoAlert } from '../utils/alert';
 export default function BuyArb() {
     const navigate = useNavigate();
     const [selectedMethod, setSelectedMethod] = useState(null);
-    const [selectedAction, setSelectedAction] = useState(null); // 'Target Price' or 'Price Range'
+    const [selectedAction, setSelectedAction] = useState(null);
 
-    // Payment list states
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [isLoadingPayments, setIsLoadingPayments] = useState(false);
     const [selectedBank, setSelectedBank] = useState(null);
 
-    // Form states for the new cards
     const [targetPrice, setTargetPrice] = useState('');
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
@@ -22,23 +20,20 @@ export default function BuyArb() {
     const [isExecuting, setIsExecuting] = useState(false);
     const [executionSuccess, setExecutionSuccess] = useState(false);
     const [currentPrice, setCurrentPrice] = useState(0);
-    const [sseCurrentPrice, setSseCurrentPrice] = useState(null); // Real Server Price
+    const [sseCurrentPrice, setSseCurrentPrice] = useState(null);
     const [executionMessage, setExecutionMessage] = useState('');
     const abortControllerRef = useRef(null);
 
-    // Purchase Blocked States
     const [isBlocked, setIsBlocked] = useState(false);
     const [cooldownSeconds, setCooldownSeconds] = useState(0);
     const [executionError, setExecutionError] = useState('');
 
-    // High frequency random price simulation effect
     useEffect(() => {
         let interval;
         if (isExecuting && !executionSuccess) {
             interval = setInterval(() => {
                 setCurrentPrice(prev => {
                     let basePrice = prev;
-                    // If we haven't received a real price yet, base it off their input targets
                     if (prev === 0) {
                         if (selectedAction === 'Target Price' && targetPrice) {
                             basePrice = parseInt(targetPrice.split(',')[0], 10);
@@ -49,18 +44,15 @@ export default function BuyArb() {
                         }
                     }
                     if (isNaN(basePrice)) return prev;
-
-                    // Generate random multiple of 100 fluctuation between -500 and 500
                     const fluctuation = (Math.floor(Math.random() * 11) - 5) * 100;
                     const newPrice = basePrice + fluctuation;
                     return newPrice > 0 ? newPrice : prev;
                 });
-            }, 80); // ultra-fast 80ms refresh rate
+            }, 80);
         }
         return () => clearInterval(interval);
     }, [isExecuting, executionSuccess, selectedAction, targetPrice, minPrice]);
 
-    // Cooldown countdown effect
     useEffect(() => {
         let interval;
         if (isBlocked && cooldownSeconds > 0) {
@@ -68,7 +60,7 @@ export default function BuyArb() {
                 setCooldownSeconds((prev) => prev - 1);
             }, 1000);
         } else if (isBlocked && cooldownSeconds <= 0) {
-            setIsBlocked(false); // Auto clear block when time expires
+            setIsBlocked(false);
         }
         return () => clearInterval(interval);
     }, [isBlocked, cooldownSeconds]);
@@ -78,7 +70,6 @@ export default function BuyArb() {
         const h = Math.floor(totalSeconds / 3600);
         const m = Math.floor((totalSeconds % 3600) / 60);
         const s = totalSeconds % 60;
-
         if (h > 0) return `${h}h ${m}m ${s}s`;
         if (m > 0) return `${m}m ${s}s`;
         return `${s}s`;
@@ -86,7 +77,7 @@ export default function BuyArb() {
 
     const handlePaymentSelection = async (method) => {
         setSelectedMethod(method);
-        setSelectedBank(null); // Reset when switching methods
+        setSelectedBank(null);
         setIsLoadingPayments(true);
         setPaymentMethods([]);
 
@@ -96,7 +87,7 @@ export default function BuyArb() {
 
         if (!userId || !phoneNumber || !authToken) {
             showInfoAlert("Session Expired", "Session expired or missing authentication data. Please log in again.");
-            navigate('/');
+            navigate('/login');
             return;
         }
 
@@ -105,9 +96,7 @@ export default function BuyArb() {
         try {
             const response = await fetch(API_ENDPOINTS.USER.PAYMENT_LIST, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     user_id: userId,
                     phone_number: phoneNumber,
@@ -124,10 +113,9 @@ export default function BuyArb() {
                 if (data.status_code === 401 || data.err === "Unauthorized / Session Expired") {
                     showInfoAlert("Session Expired", "Session expired. Please log in again.");
                     localStorage.clear();
-                    navigate('/');
+                    navigate('/login');
                     return;
                 }
-
                 if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
                     showErrorAlert("API Error", data.json.data.msg);
                 } else {
@@ -155,7 +143,7 @@ export default function BuyArb() {
 
         if (!userId || !phoneNumber || !authToken) {
             showInfoAlert("Session Expired", "Session expired or missing authentication data. Please log in again.");
-            navigate('/');
+            navigate('/login');
             return;
         }
 
@@ -182,10 +170,8 @@ export default function BuyArb() {
             if (!/^\d+$/.test(minPrice) || !/^\d+$/.test(maxPrice)) { showErrorAlert("Invalid Input", "Min and Max prices must be valid integers."); return; }
             const min = parseInt(minPrice, 10);
             const max = parseInt(maxPrice, 10);
-
             if (min < 100 || min > 100000 || max < 100 || max > 100000) { showErrorAlert("Out of Range", "Prices must be between 100 and 100,000."); return; }
             if (min >= max) { showErrorAlert("Invalid Range", "Min price must be strictly less than Max price."); return; }
-
             payloadPrices = { price_filter: 'price_range', price_range: [min, max] };
         } else {
             return;
@@ -201,14 +187,12 @@ export default function BuyArb() {
             ...payloadPrices
         };
 
-        // Reset and show modal
         setIsExecuting(true);
         setExecutionSuccess(false);
         setCurrentPrice(0);
         setSseCurrentPrice(null);
         setExecutionMessage("Matching price..");
 
-        // Cancel any existing streams
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
         }
@@ -219,9 +203,7 @@ export default function BuyArb() {
         try {
             const response = await fetch(API_ENDPOINTS.ORDER.EXECUTE, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
                 signal: abortController.signal
             });
@@ -237,14 +219,11 @@ export default function BuyArb() {
 
             while (!isDone) {
                 const { value, done } = await reader.read();
-                if (done) {
-                    isDone = true;
-                    break;
-                }
+                if (done) { isDone = true; break; }
                 buffer += decoder.decode(value, { stream: true });
 
                 const events = buffer.split('\n\n');
-                buffer = events.pop(); // keep the incomplete chunk
+                buffer = events.pop();
 
                 for (let ev of events) {
                     if (ev.trim() === '') continue;
@@ -279,13 +258,12 @@ export default function BuyArb() {
                                 if (parsedData.status_code === 401 || parsedData.err === "Unauthorized / Session Expired") {
                                     showInfoAlert("Session Expired", "Session expired. Please log in again.");
                                     localStorage.clear();
-                                    navigate('/');
+                                    navigate('/login');
                                     isDone = true;
                                     break;
                                 } else if (parsedData.err === "Limited buy functionality" && parsedData.json) {
                                     const msg = parsedData.json.msg || parsedData.err;
                                     const seconds = parsedData.json.data?.remainingSeconds || 0;
-
                                     setExecutionError(msg);
                                     setCooldownSeconds(seconds);
                                     setIsBlocked(true);
@@ -303,10 +281,6 @@ export default function BuyArb() {
                         }
                     }
                 }
-            }
-            if (!executionSuccess) {
-                // Stream finished but success wasn't fully triggered (or stopped unexpectedly)
-                // The finally block handles cleaning the layout up.
             }
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -330,7 +304,6 @@ export default function BuyArb() {
     const closeExecutionModal = () => {
         setIsExecuting(false);
         setExecutionSuccess(false);
-        // Do we navigate home upon success? Optional, leaving user on page.
     };
 
     return (
@@ -358,39 +331,20 @@ export default function BuyArb() {
                     </div>
 
                     {!selectedMethod && !selectedAction && (
-                        <div className="home-actions" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '10px', marginBottom: '20px' }}>
-                            <button
-                                className="login-btn"
-                                onClick={() => handlePaymentSelection('UPI')}
-                                style={{ width: '100%', margin: '0' }}
-                            >
+                        <div className="action-stack">
+                            <button className="login-btn full-btn" onClick={() => handlePaymentSelection('UPI')}>
                                 <span className="btn-text">UPI</span>
                                 <span className="btn-icon">⚡</span>
                             </button>
-
-                            <button
-                                className="login-btn"
-                                onClick={() => handlePaymentSelection('OTP-UPI')}
-                                style={{ width: '100%', margin: '0' }}
-                            >
+                            <button className="login-btn full-btn" onClick={() => handlePaymentSelection('OTP-UPI')}>
                                 <span className="btn-text">OTP-UPI</span>
                                 <span className="btn-icon">📱</span>
                             </button>
-
-                            <button
-                                className="login-btn"
-                                onClick={() => handlePaymentSelection('Bank')}
-                                style={{ width: '100%', margin: '0' }}
-                            >
+                            <button className="login-btn full-btn" onClick={() => handlePaymentSelection('Bank')}>
                                 <span className="btn-text">Bank</span>
                                 <span className="btn-icon">🏦</span>
                             </button>
-
-                            <button
-                                className="login-btn"
-                                onClick={() => navigate('/home')}
-                                style={{ width: '100%', margin: '0', background: 'var(--text-secondary)' }}
-                            >
+                            <button className="login-btn full-btn secondary-btn" onClick={() => navigate('/home')}>
                                 <span className="btn-text">Go Back</span>
                                 <span className="btn-icon">🔙</span>
                             </button>
@@ -398,16 +352,16 @@ export default function BuyArb() {
                     )}
 
                     {selectedMethod && !selectedBank && (
-                        <div className="home-actions" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '10px', marginBottom: '20px' }}>
+                        <div className="action-stack">
                             {isLoadingPayments ? (
-                                <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>Loading payment methods...</p>
+                                <p className="loading-text">Loading payment methods...</p>
                             ) : paymentMethods.length > 0 ? (
                                 paymentMethods.map((bank) => (
                                     <button
                                         key={bank.upi_app_id}
-                                        className="login-btn"
+                                        className="login-btn full-btn"
                                         onClick={() => setSelectedBank({ upiAppId: bank.upi_app_id, upiApp: bank.upi_code, bankName: bank.upi_app_name })}
-                                        style={{ width: '100%', margin: '0', display: 'flex', alignItems: 'center', position: 'relative' }}
+                                        style={{ position: 'relative' }}
                                     >
                                         {bank.icon_url && (
                                             <div style={{ position: 'absolute', left: '16px', display: 'flex', alignItems: 'center' }}>
@@ -418,14 +372,9 @@ export default function BuyArb() {
                                     </button>
                                 ))
                             ) : (
-                                <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>No bound payment methods found.</p>
+                                <p className="loading-text">No bound payment methods found.</p>
                             )}
-
-                            <button
-                                className="login-btn"
-                                onClick={() => setSelectedMethod(null)}
-                                style={{ width: '100%', margin: '0', background: 'var(--text-secondary)', marginTop: '10px' }}
-                            >
+                            <button className="login-btn full-btn back-btn" onClick={() => setSelectedMethod(null)}>
                                 <span className="btn-text">Back to Methods</span>
                                 <span className="btn-icon">🔙</span>
                             </button>
@@ -433,30 +382,16 @@ export default function BuyArb() {
                     )}
 
                     {selectedMethod && selectedBank && !selectedAction && (
-                        <div className="home-actions" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '10px', marginBottom: '20px' }}>
-                            <button
-                                className="login-btn"
-                                onClick={() => handleOptionClick('Target Price')}
-                                style={{ width: '100%', margin: '0' }}
-                            >
+                        <div className="action-stack">
+                            <button className="login-btn full-btn" onClick={() => handleOptionClick('Target Price')}>
                                 <span className="btn-text">Target Price</span>
                                 <span className="btn-icon">🎯</span>
                             </button>
-
-                            <button
-                                className="login-btn"
-                                onClick={() => handleOptionClick('Price Range')}
-                                style={{ width: '100%', margin: '0' }}
-                            >
+                            <button className="login-btn full-btn" onClick={() => handleOptionClick('Price Range')}>
                                 <span className="btn-text">Price Range</span>
                                 <span className="btn-icon">📊</span>
                             </button>
-
-                            <button
-                                className="login-btn"
-                                onClick={() => setSelectedBank(null)}
-                                style={{ width: '100%', margin: '0', background: 'var(--text-secondary)' }}
-                            >
+                            <button className="login-btn full-btn secondary-btn" onClick={() => setSelectedBank(null)}>
                                 <span className="btn-text">Back to Banks</span>
                                 <span className="btn-icon">🔙</span>
                             </button>
@@ -468,34 +403,19 @@ export default function BuyArb() {
                             <div className="form-group">
                                 <label className="form-label">
                                     Target Price (INR)
-                                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                                        Enter up to 10 prices separated by comma
-                                    </span>
+                                    <span className="form-sublabel">Enter up to 10 prices separated by comma</span>
                                 </label>
                                 <div className="input-wrapper">
                                     <span className="input-icon">₹</span>
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="e.g. 100, 105, 110"
-                                        value={targetPrice}
-                                        onChange={(e) => setTargetPrice(e.target.value)}
-                                        required
-                                    />
+                                    <input type="text" className="form-input" placeholder="e.g. 100, 105, 110" value={targetPrice} onChange={(e) => setTargetPrice(e.target.value)} required />
                                 </div>
                             </div>
-
-                            <div className="home-actions" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '20px', marginBottom: '10px' }}>
-                                <button type="submit" className="login-btn" style={{ width: '100%', margin: '0' }}>
+                            <div className="action-stack">
+                                <button type="submit" className="login-btn full-btn">
                                     <span className="btn-text">Place Buy Order</span>
                                     <span className="btn-icon">✓</span>
                                 </button>
-                                <button
-                                    type="button"
-                                    className="login-btn"
-                                    onClick={() => setSelectedAction(null)}
-                                    style={{ width: '100%', margin: '0', background: 'linear-gradient(135deg, #475569, #1e293b)' }}
-                                >
+                                <button type="button" className="login-btn full-btn back-btn" onClick={() => setSelectedAction(null)}>
                                     <span className="btn-text">Back to Options</span>
                                     <span className="btn-icon">🔙</span>
                                 </button>
@@ -505,48 +425,28 @@ export default function BuyArb() {
 
                     {selectedAction === 'Price Range' && (
                         <form className="login-form" onSubmit={handleBuySubmit} style={{ marginTop: '10px' }}>
-                            <div className="form-group" style={{ display: 'flex', gap: '10px' }}>
-                                <div style={{ flex: 1 }}>
+                            <div className="form-row">
+                                <div>
                                     <label className="form-label">Min Price</label>
                                     <div className="input-wrapper">
                                         <span className="input-icon">₹</span>
-                                        <input
-                                            type="text"
-                                            className="form-input"
-                                            placeholder="Min"
-                                            value={minPrice}
-                                            onChange={(e) => setMinPrice(e.target.value)}
-                                            required
-                                        />
+                                        <input type="text" className="form-input" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} required />
                                     </div>
                                 </div>
-                                <div style={{ flex: 1 }}>
+                                <div>
                                     <label className="form-label">Max Price</label>
                                     <div className="input-wrapper">
                                         <span className="input-icon">₹</span>
-                                        <input
-                                            type="text"
-                                            className="form-input"
-                                            placeholder="Max"
-                                            value={maxPrice}
-                                            onChange={(e) => setMaxPrice(e.target.value)}
-                                            required
-                                        />
+                                        <input type="text" className="form-input" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} required />
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="home-actions" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '20px', marginBottom: '10px' }}>
-                                <button type="submit" className="login-btn" style={{ width: '100%', margin: '0' }}>
+                            <div className="action-stack">
+                                <button type="submit" className="login-btn full-btn">
                                     <span className="btn-text">Place Range Order</span>
                                     <span className="btn-icon">✓</span>
                                 </button>
-                                <button
-                                    type="button"
-                                    className="login-btn"
-                                    onClick={() => setSelectedAction(null)}
-                                    style={{ width: '100%', margin: '0', background: 'linear-gradient(135deg, #475569, #1e293b)' }}
-                                >
+                                <button type="button" className="login-btn full-btn back-btn" onClick={() => setSelectedAction(null)}>
                                     <span className="btn-text">Back to Options</span>
                                     <span className="btn-icon">🔙</span>
                                 </button>
@@ -555,8 +455,8 @@ export default function BuyArb() {
                     )}
                 </div>
             ) : isExecuting ? (
-                <div className="login-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div className="login-header" style={{ width: '100%', marginBottom: '20px' }}>
+                <div className="login-card exec-card">
+                    <div className="login-header exec-header">
                         <div className="header-top">
                             <ThemeToggle />
                         </div>
@@ -566,47 +466,31 @@ export default function BuyArb() {
 
                     {executionSuccess ? (
                         <>
-                            <div className="success-icon" style={{ fontSize: '2.5rem', marginBottom: '20px', width: '70px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #10b981, #059669)', borderRadius: '50%', color: 'white' }}>✅</div>
-                            <h2 style={{ fontSize: '1.4rem', fontWeight: 700, margin: '10px 0', color: 'var(--text-primary)' }}>
-                                At: ₹{currentPrice}
-                            </h2>
-                            <p style={{ color: 'var(--text-secondary)', marginBottom: '30px', textAlign: 'center' }}>
-                                Your targeted purchase was processed successfully.
-                            </p>
-                            <button
-                                className="login-btn"
-                                style={{ width: '100%', background: 'linear-gradient(135deg, #10b981, #059669)' }}
-                                onClick={closeExecutionModal}
-                            >
+                            <div className="exec-icon exec-icon-success">✅</div>
+                            <h2 className="exec-price">At: ₹{currentPrice}</h2>
+                            <p className="exec-message">Your targeted purchase was processed successfully.</p>
+                            <button className="login-btn full-btn success-bg" onClick={closeExecutionModal}>
                                 <span className="btn-text">Done</span>
                                 <span className="btn-icon">➔</span>
                             </button>
                         </>
                     ) : (
                         <>
-                            <div className="modern-scanner" style={{ transform: 'scale(1.2)', margin: '30px 0 40px 0' }}>
+                            <div className="exec-scanner-wrap">
+                                <div className="modern-scanner"></div>
                             </div>
-
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '5px' }}>Scanning variants near...</p>
-                            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, margin: '0 0 15px 0', color: 'var(--text-primary)' }}>
-                                ₹ {currentPrice !== 0 ? currentPrice : '--'}
-                            </h2>
+                            <p className="exec-scan-label">Scanning variants near...</p>
+                            <h2 className="exec-live-price">₹ {currentPrice !== 0 ? currentPrice : '--'}</h2>
 
                             {sseCurrentPrice !== null && (
-                                <p style={{ color: '#fbbf24', fontSize: '1.1rem', fontWeight: 700, margin: '5px 0 15px 0', background: 'rgba(251, 191, 36, 0.1)', padding: '6px 16px', borderRadius: '12px', border: '1px solid rgba(251, 191, 36, 0.3)' }}>
-                                    Live Server Price: ₹ {sseCurrentPrice}
-                                </p>
+                                <p className="exec-server-price">Live Server Price: ₹ {sseCurrentPrice}</p>
                             )}
 
-                            <p style={{ color: 'var(--primary-color)', fontSize: '1.1rem', fontWeight: 500, marginBottom: '20px' }}>
+                            <p className="exec-target">
                                 Target: ₹{selectedAction === 'Target Price' ? targetPrice : `${minPrice} - ${maxPrice}`}
                             </p>
 
-                            <button
-                                className="login-btn"
-                                style={{ width: '100%', background: '#c1121f', marginTop: '20px' }}
-                                onClick={handleCancelStream}
-                            >
+                            <button className="login-btn full-btn danger-bg" onClick={handleCancelStream}>
                                 <span className="btn-text">Cancel Scanning</span>
                                 <span className="btn-icon">✖</span>
                             </button>
@@ -614,30 +498,20 @@ export default function BuyArb() {
                     )}
                 </div>
             ) : isBlocked ? (
-                <div className="login-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div className="login-header" style={{ width: '100%', marginBottom: '20px' }}>
+                <div className="login-card exec-card">
+                    <div className="login-header exec-header">
                         <div className="header-top">
                             <ThemeToggle />
                         </div>
-                        <h1 className="logo" style={{ color: '#c1121f' }}>Purchase Blocked</h1>
+                        <h1 className="logo blocked-title">Purchase Blocked</h1>
                         <p className="subtitle">{executionError}</p>
                     </div>
 
-                    <div className="success-icon" style={{ fontSize: '2.5rem', marginBottom: '20px', width: '70px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(193, 18, 31, 0.1)', border: '2px solid #c1121f', borderRadius: '50%', color: '#c1121f' }}>🚫</div>
+                    <div className="exec-icon exec-icon-blocked">🚫</div>
+                    <h2 className="exec-price">Cooldown Remaining</h2>
+                    <p className="cooldown-text">{formatCooldown(cooldownSeconds)}</p>
 
-                    <h2 style={{ fontSize: '1.4rem', fontWeight: 700, margin: '10px 0', color: 'var(--text-primary)' }}>
-                        Cooldown Remaining
-                    </h2>
-
-                    <p style={{ color: '#c1121f', fontSize: '1.8rem', fontWeight: 800, marginBottom: '30px', textAlign: 'center', letterSpacing: '1px' }}>
-                        {formatCooldown(cooldownSeconds)}
-                    </p>
-
-                    <button
-                        className="login-btn"
-                        style={{ width: '100%', background: 'linear-gradient(135deg, #475569, #1e293b)' }}
-                        onClick={() => setIsBlocked(false)}
-                    >
+                    <button className="login-btn full-btn back-btn" onClick={() => setIsBlocked(false)}>
                         <span className="btn-text">Back to Options</span>
                         <span className="btn-icon">🔙</span>
                     </button>

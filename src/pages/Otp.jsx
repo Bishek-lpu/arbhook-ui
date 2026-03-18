@@ -188,7 +188,7 @@ export default function Otp() {
         sessionStorage.removeItem('signupMobile');
         sessionStorage.removeItem('signupPassword');
         sessionStorage.removeItem('signupInvitationCode');
-        navigate('/');
+        navigate('/login');
     };
 
     return (

@@ -7,7 +7,6 @@ import { showSuccessAlert, showErrorAlert, showInfoAlert } from '../utils/alert'
 export default function Home() {
     const navigate = useNavigate();
 
-    // Invite Modal specific state
     const [isInviteOpen, setIsInviteOpen] = useState(false);
     const [fullName, setFullName] = useState('');
     const [upiId, setUpiId] = useState('');
@@ -32,7 +31,7 @@ export default function Home() {
 
         if (!userId || !phoneNumber || !authToken) {
             showErrorAlert("Session Expired", "Session expired or missing authentication data. Please log in again.");
-            navigate('/');
+            navigate('/login');
             return;
         }
 
@@ -91,86 +90,61 @@ export default function Home() {
                     <p className="subtitle">Welcome to your dashboard</p>
                 </div>
 
-                <div className="home-actions" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '20px' }}>
-                    <button
-                        className="login-btn"
-                        onClick={handleBuyArb}
-                        style={{ width: '100%', margin: '0' }}
-                    >
+                <div className="action-stack">
+                    <button className="login-btn full-btn" onClick={handleBuyArb}>
                         <span className="btn-text">Buy ARB</span>
                         <span className="btn-icon">💰</span>
                     </button>
 
-                    <button
-                        className="login-btn"
-                        onClick={handleSellArb}
-                        style={{ width: '100%', margin: '0', background: 'var(--text-secondary)' }}
-                    >
+                    <button className="login-btn full-btn secondary-btn" onClick={handleSellArb}>
                         <span className="btn-text">Sell ARB</span>
                         <span className="btn-icon">📈</span>
                     </button>
 
-                    {/* Attractive Refer and Earn Banner */}
-                    <div style={{
-                        background: 'linear-gradient(135deg, #FF9900 0%, #FF5500 100%)',
-                        borderRadius: '10px',
-                        padding: '15px',
-                        color: 'white',
-                        textAlign: 'center',
-                        boxShadow: '0 4px 15px rgba(255, 85, 0, 0.3)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)'
-                    }}>
-                        <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '24px' }}>🎁</span> Refer & Earn
+                    {/* Refer & Earn Banner */}
+                    <div className="banner banner-refer">
+                        <h3 className="banner-title">
+                            <span className="banner-title-icon">🎁</span> Refer & Earn
                         </h3>
-                        <div style={{ background: 'rgba(0,0,0,0.15)', borderRadius: '8px', padding: '10px', marginTop: '10px' }}>
-                            <p style={{ margin: '0 0 8px 0', fontSize: '14px', lineHeight: '1.4', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div className="refer-details">
+                            <p className="refer-row">
                                 <span>Friend Logs in:</span>
-                                <strong style={{ fontSize: '16px', color: '#FFF5E1', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px' }}>₹20</strong>
+                                <strong className="refer-amount">₹20</strong>
                             </p>
-                            <p style={{ margin: '0 0 8px 0', fontSize: '14px', lineHeight: '1.4', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <p className="refer-row">
                                 <span>Buys Membership:</span>
-                                <strong style={{ fontSize: '16px', color: '#FFF5E1', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px' }}>₹100</strong>
+                                <strong className="refer-amount">₹100</strong>
                             </p>
-                            <p style={{ margin: '0', fontSize: '14px', lineHeight: '1.4', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFD700', fontWeight: 'bold' }}>
+                            <p className="refer-row refer-row-highlight">
                                 <span>🎉 New Sign Up:</span>
-                                <strong style={{ fontSize: '16px', color: '#FFF5E1', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px' }}>₹100</strong>
+                                <strong className="refer-amount">₹100</strong>
                             </p>
                         </div>
                     </div>
 
-                    <button
-                        className="login-btn"
-                        onClick={() => setIsInviteOpen(!isInviteOpen)}
-                        style={{ width: '100%', margin: '0', background: 'var(--accent-color)' }}
-                    >
+                    <button className="login-btn full-btn accent-btn" onClick={() => setIsInviteOpen(!isInviteOpen)}>
                         <span className="btn-text">Refer and Earn</span>
                         <span className="btn-icon">{isInviteOpen ? '▼' : '🎁'}</span>
                     </button>
 
                     {/* Expandable Invite Form */}
                     {isInviteOpen && (
-                        <div style={{ background: 'var(--bg-secondary)', padding: '20px', borderRadius: '12px', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '15px', border: '1px solid var(--border-color)' }}>
+                        <div className="invite-panel">
                             {generatedLink ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                    <p style={{ color: 'var(--text-primary)', fontSize: '14px', textAlign: 'center', fontWeight: 'bold' }}>Your Referral Link:</p>
+                                <div className="action-stack" style={{ marginTop: 0 }}>
+                                    <p className="invite-link-text">Your Referral Link:</p>
                                     <div className="input-wrapper" style={{ margin: 0 }}>
                                         <span className="input-icon">🔗</span>
-                                        <input
-                                            type="text"
-                                            readOnly
-                                            value={generatedLink}
-                                            className="form-input"
-                                        />
+                                        <input type="text" readOnly value={generatedLink} className="form-input" />
                                     </div>
-                                    <button onClick={copyToClipboard} className="login-btn" style={{ padding: '10px', minHeight: '40px', fontSize: '14px', width: '100%', margin: '0', background: 'var(--accent-color)' }}>
+                                    <button onClick={copyToClipboard} className="login-btn full-btn accent-btn">
                                         Copy Link
                                     </button>
                                 </div>
                             ) : (
                                 <form onSubmit={handleGenerateReferral} className="login-form" style={{ marginTop: 0 }}>
-                                    <div className="form-group" style={{ marginBottom: '15px' }}>
-                                        <label style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '8px', display: 'block', fontWeight: '500' }}>Full Name (Required)</label>
+                                    <div className="form-group">
+                                        <label className="invite-label">Full Name (Required)</label>
                                         <div className="input-wrapper">
                                             <span className="input-icon">👤</span>
                                             <input
@@ -184,8 +158,8 @@ export default function Home() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="form-group" style={{ marginBottom: '20px' }}>
-                                        <label style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '8px', display: 'block', fontWeight: '500' }}>UPI ID (Required)</label>
+                                    <div className="form-group">
+                                        <label className="invite-label">UPI ID (Required)</label>
                                         <div className="input-wrapper">
                                             <span className="input-icon">💳</span>
                                             <input
@@ -201,8 +175,8 @@ export default function Home() {
                                     <button
                                         type="submit"
                                         disabled={isGenerating}
-                                        className="login-btn"
-                                        style={{ padding: '12px', minHeight: '45px', fontSize: '15px', width: '100%', margin: '0', opacity: isGenerating ? 0.7 : 1 }}
+                                        className="login-btn full-btn"
+                                        style={{ opacity: isGenerating ? 0.7 : 1 }}
                                     >
                                         <span className="btn-text">{isGenerating ? 'Generating...' : 'Get Referral Link'}</span>
                                         {!isGenerating && <span className="btn-icon">✨</span>}

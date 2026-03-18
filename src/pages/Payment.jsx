@@ -9,7 +9,6 @@ export default function Payment() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Check if the user was pushed here from Login with a known mobile number
     const prefilledMobile = location.state?.mobile || '';
 
     const [isLoading, setIsLoading] = useState(false);
@@ -18,10 +17,8 @@ export default function Payment() {
     const [mobile, setMobile] = useState(prefilledMobile);
 
     useEffect(() => {
-        // If they navigate directly here by URL without context, clear state
         if (!prefilledMobile && !mobile) {
-            // Optional: you could force them back to login here, but 
-            // since this is a demo, we will let them manually enter it
+            // Let user manually enter mobile
         }
     }, [prefilledMobile, mobile]);
 
@@ -47,7 +44,6 @@ export default function Payment() {
             const data = await response.json();
 
             if (response.ok && data.success && data.data?.payment_url) {
-                // Redirect user to the Instamojo checkout URL
                 window.location.href = data.data.payment_url;
             } else {
                 if (response.status === 404) {
@@ -77,14 +73,14 @@ export default function Payment() {
                     <div className="header-top">
                         <ThemeToggle />
                     </div>
-                    <div className="success-icon" style={{ fontSize: '2.5rem', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(251, 191, 36, 0.1)', border: '2px solid #fbbf24', borderRadius: '50%', color: '#fbbf24', margin: '0 auto 15px auto' }}>🔒</div>
-                    <h1 className="logo" style={{ color: '#fbbf24', fontSize: '1.8rem' }}>Subscription Expired</h1>
+                    <div className="subscription-icon">🔒</div>
+                    <h1 className="logo subscription-title">Subscription Expired</h1>
                     <p className="subtitle">Your trial or subscription period has ended. Please renew to continue accessing Arbhook.</p>
                 </div>
 
                 <PromotionalBanner />
 
-                <form className="login-form" onSubmit={handlePaymentSubmit} style={{ marginTop: '20px' }}>
+                <form className="login-form" onSubmit={handlePaymentSubmit}>
                     <div className="form-group">
                         <label htmlFor="fullName" className="form-label">Full Name</label>
                         <div className="input-wrapper">
@@ -132,23 +128,18 @@ export default function Payment() {
                                 value={mobile}
                                 readOnly={!!prefilledMobile}
                                 onChange={(e) => setMobile(e.target.value)}
-                                style={{ backgroundColor: prefilledMobile ? 'var(--input-bg)' : undefined, opacity: prefilledMobile ? 0.7 : 1 }}
+                                style={{ opacity: prefilledMobile ? 0.7 : 1 }}
                             />
                         </div>
                     </div>
 
-                    <div className="home-actions" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '30px', marginBottom: '10px' }}>
-                        <button type="submit" className={`login-btn ${isLoading ? 'loading' : ''}`} style={{ width: '100%', margin: '0', background: '#eab308' }}>
+                    <div className="action-stack">
+                        <button type="submit" className={`login-btn full-btn ${isLoading ? 'loading' : ''}`} style={{ background: '#eab308' }}>
                             <span className="btn-text">{isLoading ? 'Processing...' : 'Pay Now'}</span>
                             {!isLoading && <span className="btn-icon">💳</span>}
                         </button>
 
-                        <button
-                            type="button"
-                            className="login-btn"
-                            onClick={() => navigate('/')}
-                            style={{ width: '100%', margin: '0', background: 'linear-gradient(135deg, #475569, #1e293b)' }}
-                        >
+                        <button type="button" className="login-btn full-btn back-btn" onClick={() => navigate('/login')}>
                             <span className="btn-text">Back to Login</span>
                             <span className="btn-icon">🔙</span>
                         </button>

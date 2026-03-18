@@ -96,26 +96,21 @@ export default function Login() {
                         <ThemeToggle />
                     </div>
                     <h1 className="logo">Arb<span className="logo-highlight">hook</span></h1>
-                    <p className="subtitle">Welcome back! Please login to your account.</p>
                 </div>
 
-                {/* Attractive Free Trial Banner */}
-                <div style={{
-                    background: 'linear-gradient(135deg, #00C6FF 0%, #0072FF 100%)',
-                    borderRadius: '10px',
-                    padding: '15px',
-                    margin: '0 0 20px 0',
-                    color: 'white',
-                    textAlign: 'center',
-                    boxShadow: '0 4px 15px rgba(0, 114, 255, 0.3)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)'
-                }}>
-                    <h3 style={{ margin: '0 0 5px 0', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '24px' }}>🎁</span> Special Offer
+                {/* Free Trial Banner */}
+                <div className="banner banner-blue">
+                    <h3 className="banner-title">
+                        <span className="banner-title-icon">🎁</span> Special Offer
                     </h3>
-                    <p style={{ margin: '0', fontSize: '15px', lineHeight: '1.4' }}>
-                        Login now and get a <strong style={{ fontSize: '18px', color: '#E0F7FA', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', margin: '0 5px' }}>7-Day Free Trial</strong> instantly!
+                    <p className="banner-text">
+                        Login now and get a <strong className="banner-highlight">7-Day Free Trial</strong> instantly!
                     </p>
+                </div>
+
+                {/* Login Instruction Note */}
+                <div className="banner banner-note">
+                    <p className="banner-text">📝 Login with your <strong>ARB Wallet</strong> phone number and password</p>
                 </div>
 
                 <form className="login-form" onSubmit={handleSubmit}>
@@ -204,9 +199,9 @@ export default function Login() {
             {/* Free Trial Modal */}
             <div className={`success-modal ${showTrialModal ? 'show' : ''}`}>
                 <div className="success-content">
-                    <div className="success-icon" style={{ fontSize: '2.5rem' }}>🎁</div>
-                    <h2 className="success-title" style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Congratulations!</h2>
-                    <p className="success-message" style={{ margin: '0 0 20px 0' }}>
+                    <div className="success-icon">🎁</div>
+                    <h2 className="success-title">Congratulations!</h2>
+                    <p className="success-message">
                         You've unlocked a <b>{freeTrialDays}-Day Free Trial</b>!<br />
                         Enjoy full access to our premium features.
                     </p>

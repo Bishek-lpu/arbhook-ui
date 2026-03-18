@@ -121,22 +121,13 @@ export default function Signup() {
                     <p className="subtitle">Create your account and join us today!</p>
                 </div>
 
-                {/* Attractive Signup Bonus Banner */}
-                <div style={{
-                    background: 'linear-gradient(135deg, #FF9900 0%, #FF5500 100%)',
-                    borderRadius: '10px',
-                    padding: '15px',
-                    margin: '0 0 20px 0',
-                    color: 'white',
-                    textAlign: 'center',
-                    boxShadow: '0 4px 15px rgba(255, 85, 0, 0.3)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)'
-                }}>
-                    <h3 style={{ margin: '0 0 5px 0', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '24px' }}>🎉</span> Sign Up Bonus!
+                {/* Signup Bonus Banner */}
+                <div className="banner banner-orange">
+                    <h3 className="banner-title">
+                        <span className="banner-title-icon">🎉</span> Sign Up Bonus!
                     </h3>
-                    <p style={{ margin: '0', fontSize: '15px', lineHeight: '1.4' }}>
-                        Create an account now and get <strong style={{ fontSize: '18px', color: '#FFF5E1', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '4px', marginLeft: '5px' }}>₹100</strong> instantly!
+                    <p className="banner-text">
+                        Create an account now and get <strong className="banner-highlight">₹100</strong> instantly!
                     </p>
                 </div>
 
@@ -255,7 +246,7 @@ export default function Signup() {
                 </form>
 
                 <div className="signup-prompt">
-                    <p>Already have an account? <Link to={`/${refCode ? `?ref=${refCode}` : ''}`} className="signup-link">Login</Link></p>
+                    <p>Already have an account? <Link to={`/login${refCode ? `?ref=${refCode}` : ''}`} className="signup-link">Login</Link></p>
                 </div>
             </div>
         </div>
