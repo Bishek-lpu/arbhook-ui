@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 
 export default function Landing() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            navigate('/login', { replace: true });
+        }
+    }, [navigate]);
 
     return (
         <div className="container">
