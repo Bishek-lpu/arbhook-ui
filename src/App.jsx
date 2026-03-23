@@ -7,6 +7,7 @@ import Otp from './pages/Otp';
 import Home from './pages/Home';
 import BuyArb from './pages/BuyArb';
 import Payment from './pages/Payment';
+import Plan from './pages/Plan';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/otp" element={<Otp />} />
+        <Route path="/plan" element={<Plan />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
           <Route path="/buy-arb" element={<BuyArb />} />

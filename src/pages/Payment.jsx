@@ -11,6 +11,7 @@ export default function Payment() {
     const location = useLocation();
 
     const prefilledMobile = location.state?.mobile || '';
+    const { planId, price, duration } = location.state || {};
 
     const [isLoading, setIsLoading] = useState(false);
     const [fullName, setFullName] = useState('');
@@ -31,7 +32,8 @@ export default function Payment() {
             const payload = {
                 full_name: fullName.trim(),
                 phone_number: parseInt(mobile, 10),
-                email: email.trim()
+                email: email.trim(),
+                ...(planId && { plan: parseInt(planId, 10) })
             };
 
             const response = await fetch(API_ENDPOINTS.PAYMENTS.CREATE, {
@@ -75,12 +77,9 @@ export default function Payment() {
                     <div className="header-top">
                         <ThemeToggle />
                     </div>
-                    <div className="subscription-icon">🔒</div>
-                    <h1 className="logo subscription-title">Subscription Expired</h1>
-                    <p className="subtitle">Your trial or subscription period has ended. Please renew to continue accessing Arbhook.</p>
                 </div>
 
-                <PromotionalBanner />
+                <PromotionalBanner duration={duration || "6 Months"} price={price || 499} />
 
                 <form className="login-form" onSubmit={handlePaymentSubmit}>
                     <div className="form-group">

@@ -1,19 +1,24 @@
 import React from 'react';
 
-const PromotionalBanner = () => {
+const PromotionalBanner = ({ duration = "6 Months", price = 499 }) => {
+    const oldPrice = parseInt(price) * 2;
+    const displayTitle = duration.toLowerCase().includes('subscription') 
+        ? duration 
+        : `${duration} Subscription`;
+
     return (
         <div className="promo-banner">
             <div className="promo-badge">Limited Time Offer</div>
             
             <div className="promo-content">
-                <h2 className="promo-title">6 Months Subscription</h2>
+                <h2 className="promo-title">{displayTitle}</h2>
                 
                 <div className="promo-pricing">
                     <div className="price-old">
-                        <span className="currency">₹</span>998
+                        <span className="currency">₹</span>{oldPrice}
                     </div>
                     <div className="price-new">
-                        <span className="currency">₹</span>499
+                        <span className="currency">₹</span>{price}
                     </div>
                 </div>
                 
