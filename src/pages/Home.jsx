@@ -113,10 +113,10 @@ export default function Home() {
                                 <span>Friend Logs in:</span>
                                 <strong className="refer-amount">₹20</strong>
                             </p>
-                            <p className="refer-row">
+                            {/* <p className="refer-row">
                                 <span>Buys Membership:</span>
                                 <strong className="refer-amount">₹100</strong>
-                            </p>
+                            </p> */}
                             <p className="refer-row refer-row-highlight">
                                 <span>🎉 New Sign Up:</span>
                                 <strong className="refer-amount">₹100</strong>
