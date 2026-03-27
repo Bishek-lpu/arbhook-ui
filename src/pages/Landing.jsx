@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 import SEO from '../components/SEO';
 
 export default function Landing() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const refCode = searchParams.get('ref') || '';
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (token) {
-            navigate('/login', { replace: true });
+            navigate(`/login${refCode ? `?ref=${refCode}` : ''}`, { replace: true });
         }
-    }, [navigate]);
+    }, [navigate, refCode]);
 
     return (
         <div className="container">
@@ -76,7 +78,7 @@ export default function Landing() {
                 <div className="action-buttons landing-actions">
                     <button
                         className="login-btn landing-btn main-btn"
-                        onClick={() => navigate('/login')}
+                        onClick={() => navigate(`/login${refCode ? `?ref=${refCode}` : ''}`)}
                     >
                         <span className="btn-text">Login to Dashboard</span>
                         <span className="btn-icon">→</span>
@@ -84,7 +86,7 @@ export default function Landing() {
 
                     <button
                         className="login-btn landing-btn outline-btn"
-                        onClick={() => navigate('/signup')}
+                        onClick={() => navigate(`/signup${refCode ? `?ref=${refCode}` : ''}`)}
                     >
                         <span className="btn-text">Create an Account</span>
                     </button>
