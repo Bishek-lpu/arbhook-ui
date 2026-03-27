@@ -173,6 +173,7 @@ export default function Login() {
                                 placeholder="Enter invitation code"
                                 value={invitationCode}
                                 onChange={(e) => setInvitationCode(e.target.value)}
+                                readOnly={!!refCode}
                             />
                         </div>
                     </div>
