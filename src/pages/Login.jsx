@@ -65,7 +65,9 @@ export default function Login() {
                 }
             } else {
                 // Handle specified errors appropriately
-                if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
+                if (data.detail === "ARB Side Problem | API fail") {
+                    navigate('/download');
+                } else if (data.err === "ARB Side Problem | API fail" && data.json && data.json.data && data.json.data.msg) {
                     showErrorAlert("API Error", data.json.data.msg);
                 } else if (response.status === 400 && data.detail === "Subscription Expired") {
                     navigate('/plan', { state: { mobile } });

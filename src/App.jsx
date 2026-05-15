@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import BuyArb from './pages/BuyArb';
 import Payment from './pages/Payment';
 import Plan from './pages/Plan';
+import Download from './pages/Download';
 import ScrollToTop from './components/ScrollToTop';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/plan" element={<Plan />} />
+        <Route path="/download" element={<Download />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<Home />} />
           <Route path="/buy-arb" element={<BuyArb />} />
