@@ -86,6 +86,14 @@ export default function Download() {
                         Download Arbhook App
                     </a>
                     <div className="dl-note">Direct APK download — no Play Store needed</div>
+                    
+                    <div className="sub-reassurance">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <span><strong>Existing subscriber?</strong> Your plan carries over automatically. No need to purchase again.</span>
+                    </div>
                 </div>
             </div>
 
