@@ -150,8 +150,55 @@
   font-size: 15px;
   color: #9aa0b8;
   line-height: 1.7;
-  margin-bottom: 2.2rem;
+  margin-bottom: 1.5rem;
   padding: 0 10px;
+}
+
+/* Free badge */
+.download-page-wrapper .free-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(90deg, rgba(245, 166, 35, 0.12), rgba(247, 108, 47, 0.05));
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #e2e8f0;
+  margin-bottom: 2.2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(245, 166, 35, 0.1);
+  animation: badgePulse 3s infinite alternate;
+}
+
+.download-page-wrapper .free-badge span {
+  color: var(--dl-gold);
+  font-weight: 800;
+}
+
+.download-page-wrapper .free-badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(245, 166, 35, 0.2), transparent);
+  animation: badgeShine 4s infinite;
+}
+
+@keyframes badgeShine {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}
+
+@keyframes badgePulse {
+  0% { box-shadow: 0 4px 15px rgba(245, 166, 35, 0.1); border-color: rgba(245, 166, 35, 0.3); }
+  100% { box-shadow: 0 4px 25px rgba(245, 166, 35, 0.25); border-color: rgba(245, 166, 35, 0.5); }
 }
 
 

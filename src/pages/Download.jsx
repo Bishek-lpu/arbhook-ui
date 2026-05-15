@@ -72,6 +72,10 @@ export default function Download() {
                     <h1 className="title-gradient">We are moving to our App!</h1>
                     <p className="sub">We're shifting from the website to our dedicated application. Download it now so you're all set the moment we go live.</p>
 
+                    <div className="free-badge">
+                        🎁 <span>100% Free for 7 Days</span> — No payment needed
+                    </div>
+
                     <div className="dl-label">Get ready — Download the App</div>
                     <a href={APK_LINK} className="dl-btn" download>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
