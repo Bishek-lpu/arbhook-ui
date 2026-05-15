@@ -13,12 +13,16 @@
   font-family: 'Outfit', sans-serif;
   background: var(--dl-bg);
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
   overflow-x: hidden;
-  position: relative;
+  overflow-y: auto;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   width: 100vw;
   margin: 0;
 }
@@ -137,6 +141,7 @@
   font-weight: 900;
   background: linear-gradient(135deg, #ffffff 0%, #b0b5c9 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.8rem;
   line-height: 1.2;
